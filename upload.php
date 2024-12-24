@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
         }
     }
 } else {
-    echo "Invalid request.";
+    echo "<script>console.log(\"Invalid request!\");</script>";
 }
 ?>
 <!DOCTYPE html>

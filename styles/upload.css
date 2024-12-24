@@ -1,0 +1,114 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+input[type="file"] {
+    display: block;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    width: 50%;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+td:first-child {
+    width: 70%; /* Limit file name column to 70% of table width */
+    word-wrap: break-word; /* Allow long text to wrap */
+    overflow-wrap: anywhere;
+}
+
+td:last-child {
+    width: 30%; /* Tags column takes up 30% of table width */
+}
+
+input.tag-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input.tag-input:focus {
+    border-color: #4CAF50;
+}
+
+@media (max-width: 600px) {
+    td:first-child {
+        width: 100%;
+    }
+    td:last-child{
+        width: 100%;
+    }
+    table, th, td {
+        display: block;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: right;
+        padding-left: 10px;
+    }
+}
+
+
+.choosebtn{
+    padding: 20px 10px;
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+.alert-box{
+    text-align: center;
+    color: #45a049;
+}

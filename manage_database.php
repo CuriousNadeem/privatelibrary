@@ -17,6 +17,9 @@ $result = $conn->query("SELECT * FROM galleries");
 <body>
     <?php include 'header.php';?>
     <h1>Manage Database</h1>
+    <div class="log-container">
+        <p id="log"></p>
+    </div>
     <div class="table-container">
     <table>
         <thead>
@@ -46,6 +49,7 @@ $result = $conn->query("SELECT * FROM galleries");
 
     <script>
         // Handle inline editing
+        const log = document.getElementById('log');
         document.querySelectorAll('.editable').forEach(cell => {
             cell.addEventListener('blur', function() {
                 const id = this.getAttribute('data-id');
@@ -60,9 +64,9 @@ $result = $conn->query("SELECT * FROM galleries");
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Updated successfully!');
+                        log.innerHTML = "Updated successfully!";
                     } else {
-                        alert('Error updating entry.');
+                        log.innerHTML = "Error updating entry.";
                     }
                 });
             });
@@ -79,10 +83,10 @@ $result = $conn->query("SELECT * FROM galleries");
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Deleted successfully!');
+                        log.innerHTML = "Deleted successfully!";
                         location.reload(); // Refresh the page
                     } else {
-                        alert('Error deleting entry.');
+                        log.innerHTML = "Error deleting entry.";
                     }
                 });
             }

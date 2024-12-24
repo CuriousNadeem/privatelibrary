@@ -33,7 +33,7 @@ tr:hover {
 td.editable {
     overflow-wrap: anywhere;
     cursor: pointer;
-    border: 1px dashed #28a745;
+    border: 1px dashed var(--secondary-bg);
 }
 
 /* Table row delete button */
@@ -74,4 +74,13 @@ button:hover {
     max-width: 1400px;
     margin: auto;
     overflow: auto;
+}
+
+.log-container {
+    margin: auto;
+    width: 90%;
+    max-width: 1400px;
+    background-color: var(--accent-bg2);
+    border-radius: 10px;
+    text-align: center;
 }

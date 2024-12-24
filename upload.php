@@ -1,19 +1,16 @@
 <?php
 include 'includes/db_connect.php';
 
-// Handle multiple file uploads
+// Handle multiple file uploads (same as before)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !empty($_FILES['zip_files']['name'][0])) {
     $tags = $_POST['tags'] ?? [];
 
-    // Loop through the selected files
     foreach ($_FILES['zip_files']['name'] as $index => $fileName) {
-        // Get each file's temporary name and tags
         $fileTmpName = $_FILES['zip_files']['tmp_name'][$index];
         $zipName = pathinfo($fileName, PATHINFO_FILENAME);
         $tag = isset($tags[$index]) ? $tags[$index] : '';
 
-        // Validate file size and move the file
-        if ($_FILES['zip_files']['size'][$index] > 200 * 1024 * 1024) { // 200MB
+        if ($_FILES['zip_files']['size'][$index] > 200 * 1024 * 1024) {
             echo "Error: The file $fileName is too large. Maximum allowed size is 200MB.<br>";
             continue;
         }
@@ -24,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
             mkdir($targetDir, 0777, true);
         }
 
-        // Move uploaded ZIP file
         $zipPath = $targetDir . ".zip";
         move_uploaded_file($fileTmpName, $zipPath);
 
@@ -32,27 +28,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
         if ($zip->open($zipPath) === TRUE) {
             $zip->extractTo($targetDir);
             $zip->close();
-            unlink($zipPath); // Remove the ZIP file after extraction
+            unlink($zipPath);
 
-            // Set the cover image path (1.jpg or fallback to 0.jpg)
             $coverImagePath = "assets/galleries/$zipName/1.jpg";
             if (!file_exists(__DIR__ . "/$coverImagePath")) {
                 $coverImagePath = "assets/galleries/$zipName/0.jpg";
             }
 
-            // Ensure that at least one image exists
             if (!file_exists(__DIR__ . "/$coverImagePath")) {
                 echo "Error: No valid cover image found in the uploaded ZIP for $fileName.<br>";
                 continue;
             }
 
-            // Insert gallery information into the database
             $sql = "INSERT INTO galleries (name, cover_image_path, tags, created_at) VALUES (?, ?, ?, NOW())";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param('sss', $zipName, $coverImagePath, $tag);
 
             if ($stmt->execute()) {
-                echo "Gallery $fileName uploaded successfully!<br>";
+                echo "Gallery $fileName uploaded successfully!";
             } else {
                 echo "Error: Failed to save gallery $fileName in the database.<br>";
             }
@@ -97,15 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
         <br><br>
         <button type="submit">Upload All</button>
     </form>
-    <div class="alert-box">
-    </div>
+    <div id="alert-box"></div>
 
     <script>
         const fileInput = document.getElementById('zip_files');
         const fileTable = document.getElementById('file-table').getElementsByTagName('tbody')[0];
+        const tags = ['Foot Licking', 'Foot Fetish', 'Futanari', 'Dickgirl', 'Dickgirl on Male', 'Dickgirl on Female', 'Dickgirl on Dickgirl', 'Pegging', 'Femdom', 'NTR', 'BDSM', 'Stockings', 'Giantess', 'Inside Shoe', 'Inside Socks', 'Femboy', 'MindBreak', 'Ahegao', 'Boy Ahegao', 'Girl Ahegao', 'Stomach Defloration', 'Belly Bulge', 'Only Female'];
 
         // Display selected files in a table
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             fileTable.innerHTML = ''; // Clear previous table rows
 
             // Loop through the selected files and add them to the table
@@ -119,15 +112,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
                 // Set the file name in the first column
                 cell1.textContent = fileName;
 
-                // Create an input for tags in the second column
+                // Create a container for tag input
+                const tagInputContainer = document.createElement('div');
+                tagInputContainer.classList.add('tag-input-container');
+
+                // Create an input for tags
                 const tagInput = document.createElement('input');
                 tagInput.type = 'text';
-                tagInput.name = 'tags[]';
                 tagInput.placeholder = 'Enter tags';
                 tagInput.classList.add('tag-input');
-                cell2.appendChild(tagInput);
+
+                // Create a hidden input to store the final tags
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'tags[]';
+
+                tagInputContainer.appendChild(tagInput);
+                tagInputContainer.appendChild(hiddenInput);
+                cell2.appendChild(tagInputContainer);
+
+                // Handle dropdown and tag addition
+                tagInput.addEventListener('input', function () {
+                    const value = this.value.toLowerCase();
+                    const suggestions = tags.filter(tag => tag.toLowerCase().startsWith(value));
+                    let dropdown = tagInputContainer.querySelector('.autocomplete-dropdown');
+
+                    if (!dropdown) {
+                        dropdown = document.createElement('ul');
+                        dropdown.classList.add('autocomplete-dropdown');
+                        tagInputContainer.appendChild(dropdown);
+                    }
+
+                    dropdown.innerHTML = ''; // Clear previous suggestions
+
+                    suggestions.forEach(suggestion => {
+                        const option = document.createElement('li');
+                        option.textContent = suggestion;
+                        option.addEventListener('click', () => {
+                            addTag(tagInput, hiddenInput, suggestion);
+                            dropdown.remove();
+                        });
+                        dropdown.appendChild(option);
+                    });
+                });
+
+                // Handle blur to remove the dropdown
+                tagInput.addEventListener('blur', function () {
+                    setTimeout(() => {
+                        const dropdown = tagInputContainer.querySelector('.autocomplete-dropdown');
+                        if (dropdown) dropdown.remove();
+                    }, 100); // Delay to allow for click on dropdown items
+                });
+
+                // Handle Enter key for manual tag addition
+                tagInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const value = this.value.trim();
+                        if (value) {
+                            addTag(tagInput, hiddenInput, value);
+                        }
+                    }
+                });
             }
         });
+
+        // Function to add a tag
+        function addTag(input, hiddenInput, tag) {
+            // Append the tag to the hidden input's value
+            const currentTags = hiddenInput.value ? hiddenInput.value.split(',') : [];
+            if (!currentTags.includes(tag)) {
+                currentTags.push(tag);
+                hiddenInput.value = currentTags.join(',');
+            }
+
+            // Clear the input and show current tags visually
+            input.value = '';
+            const tagDisplay = document.createElement('span');
+            tagDisplay.classList.add('tag-display');
+            tagDisplay.textContent = tag;
+            input.parentNode.insertBefore(tagDisplay, input);
+
+            // Allow removal of tags
+            tagDisplay.addEventListener('click', () => {
+                tagDisplay.remove();
+                const index = currentTags.indexOf(tag);
+                if (index > -1) {
+                    currentTags.splice(index, 1);
+                    hiddenInput.value = currentTags.join(',');
+                }
+            });
+        }
     </script>
+
+    <style>
+.tag-input-container {
+    position: relative;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--primary-bg);
+    color: var(--accent-color);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.autocomplete-dropdown li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.autocomplete-dropdown li:hover {
+    background: var(--secondary-bg);
+}
+
+.tag-display {
+    display: inline-block;
+    background: var(--btn-bg);
+    color: #fff;
+    padding: 4px 8px;
+    margin: 4px 4px 4px 0;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.tag-display:hover {
+    background: var(--btn-bg-hover);
+}
+
+    </style>
 </body>
 </html>

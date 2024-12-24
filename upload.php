@@ -70,9 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Gallery</title>
+    <link rel="stylesheet" href="styles/colorpalette.css">
     <link rel="stylesheet" href="styles/upload.css">
 </head>
 <body>
+    <?php include 'header.php';?>
     <h1>Upload Gallery</h1>
 
     <form action="upload.php" method="POST" enctype="multipart/form-data">

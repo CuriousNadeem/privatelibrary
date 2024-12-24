@@ -1,39 +1,28 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    color: #333;
-}
-
-.navbar{
-    width: 100%;
-    padding: 0 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.navbar a {
-    padding: 10px 20px;
-}
-
 .grid {
+    margin: auto;
+    width: 100%;
+    max-width: 1920px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
     padding: 20px;
 }
 
+@media (max-width: 768px) {
+    .grid {
+        width: 90%;
+    }
+}
+@media (min-width: 769px) and (max-width: 1400px) {
+    .grid {
+        width: 95%;
+    }
+}
+
 .grid-card {
     text-align: center;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: var(--primary-bg);
+    border: 1px solid var(--secondary-bg);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -49,10 +38,15 @@ h1 {
     width: 100%;
     height: auto;
     display: block;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--secondary-bg);
+}
+.image-container {
+    max-height: 280px;
+    overflow: hidden;
 }
 
 .grid-card h3 {
-    margin: 10px 0;
-    color: #333;
+    margin: 10px;
+    color: var(--text-color);
+    overflow-wrap: break-word;
 }

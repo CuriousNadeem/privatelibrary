@@ -10,16 +10,47 @@ $gallery = $result->fetch_assoc();
 
 if ($gallery):
     $galleryPath = 'assets/galleries/' . $gallery['name'];
-    $images = array_diff(scandir($galleryPath), ['.', '..']);
+    // Scan the directory and sort images in ascending order
+    $allFiles = array_diff(scandir($galleryPath), ['.', '..']);
+    
+    // Filter files for only .jpg and .png extensions
+    $images = array_filter($allFiles, function ($file) {
+        return preg_match('/\.(jpg|png)$/i', $file); // Match .jpg or .png (case insensitive)
+    });
+
+    natsort($images); // Sort images naturally (e.g., 1.jpg, 2.jpg, 10.jpg)
 ?>
 
-<h1><?= $gallery['name'] ?></h1>
-<p>Tags: <?= $gallery['tags'] ?></p>
-<div class="gallery">
-    <?php foreach ($images as $image): ?>
-    <img src="<?= $galleryPath . '/' . $image ?>" alt="<?= $image ?>">
-    <?php endforeach; ?>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $gallery['name'] ?> - Gallery</title>
+    <link rel="stylesheet" href="styles/colorpalette.css">
+    <link rel="stylesheet" href="styles/gallery.css">
+</head>
+<body>
+    <?php include 'header.php';?>
+    <div class="intro">
+        <div class="cover-container">
+            <img src="<?= $galleryPath . '/' . "1.jpg" ?>" alt="<?= $image ?>">
+        </div>
+        <div class="details">
+            <h2><?= $gallery['name'] ?></h2>
+            <p>Tags: <?= $gallery['tags'] ?></p>
+            <p>Author: </p>
+        </div>
+    </div>
+    <div class="gallery-container">
+    <div class="gallery">
+        <?php foreach ($images as $image): ?>
+        <img src="<?= $galleryPath . '/' . $image ?>" alt="<?= $image ?>">
+        <?php endforeach; ?>
+    </div>
+    </div>
+</body>
+</html>
 
 <?php else: ?>
 <p>Gallery not found.</p>

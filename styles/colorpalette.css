@@ -1,0 +1,84 @@
+:root {
+    /* General Theme Colors */
+    --primary-bg: #1A1A1D;       /* Background color */
+    --secondary-bg: #6F2232;     /* Secondary background or section color */
+    --accent-color: #C3073F;     /* Highlight or accent */
+    --text-color: #E6E6E6;       /* Text color */
+    --border-highlight: #950740; /* Border or subtle highlights */
+  
+    /* Button Colors */
+    --btn-bg: var(--accent-color);              /* Button background */
+    --btn-text: var(--text-color);              /* Button text */
+    --btn-border: var(--border-highlight);      /* Button border */
+  
+    /* Button States */
+    --btn-bg-hover: #A60538;        /* Button background on hover */
+    --btn-text-hover: var(--text-color); /* Button text on hover */
+    --btn-border-hover: var(--text-color); /* Button border on hover */
+  
+    --btn-bg-pressed: #87052E;      /* Button background when pressed */
+    --btn-text-pressed: var(--text-color); /* Button text when pressed */
+    --btn-border-pressed: var(--border-highlight); /* Button border when pressed */
+  }
+  
+  /* Example Usage */
+  body {
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  button {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: 2px solid var(--btn-border);
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: var(--btn-bg-hover);
+    color: var(--btn-text-hover);
+    border-color: var(--btn-border-hover);
+  }
+  
+  button:active {
+    background-color: var(--btn-bg-pressed);
+    color: var(--btn-text-pressed);
+    border-color: var(--btn-border-pressed);
+  }
+
+  .highlight {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--accent-color);
+  }
+  
+  h1, h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--text-color);
+    overflow-wrap: break-word;
+  }
+
+  .navbar{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-bg);
+}
+
+.links {
+    color: var(--secondary-bg);
+    text-decoration: none;
+    padding: 10px 10px;
+    font-size: 20px;
+    font-weight: 600;
+}

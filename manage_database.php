@@ -11,9 +11,11 @@ $result = $conn->query("SELECT * FROM galleries");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Database</title>
+    <link rel="stylesheet" href="styles/colorpalette.css">
     <link rel="stylesheet" href="styles/md.css">
 </head>
 <body>
+    <?php include 'header.php';?>
     <h1>Manage Database</h1>
     <div class="table-container">
     <table>

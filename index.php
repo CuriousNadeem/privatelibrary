@@ -20,14 +20,11 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery</title>
+    <link rel="stylesheet" href="styles/colorpalette.css">
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-        <nav class="navbar"> 
-        <a href="index.php">Home</a>
-        <a href="upload.php">Upload</a>
-        <a href="manage_database.php">manage</a>
-        </nav>
+    <?php include 'header.php';?>
     <div class="grid">
         <?php
         while ($row = $result->fetch_assoc()):
@@ -37,7 +34,9 @@ if (!$result) {
         ?>
         <div class="grid-card">
             <a href="gallery.php?id=<?= $row['id'] ?>">
+                <div class="image-container">
                 <img src="<?= $coverImagePath ?>" alt="<?= $galleryName ?>" class="cover-image">
+                </div>
                 <h3><?= $galleryName ?></h3>
             </a>
         </div>

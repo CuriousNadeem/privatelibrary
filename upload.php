@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
     <title>Upload Gallery</title>
     <link rel="stylesheet" href="styles/colorpalette.css">
     <link rel="stylesheet" href="styles/upload.css">
+    <link rel="stylesheet" href="styles/tags.css">
 </head>
 <body>
     <?php include 'header.php';?>
@@ -92,13 +93,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
     </form>
     <div id="alert-box"></div>
 
+    <script src="js/tags.js"></script>
     <script>
-        const fileInput = document.getElementById('zip_files');
-        const fileTable = document.getElementById('file-table').getElementsByTagName('tbody')[0];
-        const tags = ['Foot Licking', 'Foot Fetish', 'Futanari', 'Dickgirl', 'Dickgirl on Male', 'Dickgirl on Female', 'Dickgirl on Dickgirl', 'Pegging', 'Femdom', 'NTR', 'BDSM', 'Stockings', 'Giantess', 'Inside Shoe', 'Inside Socks', 'Femboy', 'MindBreak', 'Ahegao', 'Boy Ahegao', 'Girl Ahegao', 'Stomach Defloration', 'Belly Bulge', 'Only Female'];
+        // Function to add a tag
+    function addTag(input, hiddenInput, tag) {
+        // Append the tag to the hidden input's value
+        const currentTags = hiddenInput.value ? hiddenInput.value.split(',') : [];
+        if (!currentTags.includes(tag)) {
+            currentTags.push(tag);
+            hiddenInput.value = currentTags.join(',');
+        }
 
-        // Display selected files in a table
-        fileInput.addEventListener('change', function () {
+        // Clear the input and show current tags visually
+        input.value = '';
+        const tagDisplay = document.createElement('span');
+        tagDisplay.classList.add('tag-item');
+        tagDisplay.textContent = tag;
+        input.parentNode.insertBefore(tagDisplay, input);
+
+        // Allow removal of tags
+        tagDisplay.addEventListener('click', () => {
+            tagDisplay.remove();
+            const index = currentTags.indexOf(tag);
+            if (index > -1) {
+                currentTags.splice(index, 1);
+                hiddenInput.value = currentTags.join(',');
+            }
+        });
+    }
+
+    const fileInput = document.getElementById('zip_files');
+    const fileTable = document.getElementById('file-table').getElementsByTagName('tbody')[0];
+    
+            // Display selected files in a table
+            fileInput.addEventListener('change', function () {
             fileTable.innerHTML = ''; // Clear previous table rows
 
             // Loop through the selected files and add them to the table
@@ -114,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
 
                 // Create a container for tag input
                 const tagInputContainer = document.createElement('div');
-                tagInputContainer.classList.add('tag-input-container');
+                tagInputContainer.classList.add('tag-editor');
 
                 // Create an input for tags
                 const tagInput = document.createElement('input');
@@ -176,79 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
                 });
             }
         });
-
-        // Function to add a tag
-        function addTag(input, hiddenInput, tag) {
-            // Append the tag to the hidden input's value
-            const currentTags = hiddenInput.value ? hiddenInput.value.split(',') : [];
-            if (!currentTags.includes(tag)) {
-                currentTags.push(tag);
-                hiddenInput.value = currentTags.join(',');
-            }
-
-            // Clear the input and show current tags visually
-            input.value = '';
-            const tagDisplay = document.createElement('span');
-            tagDisplay.classList.add('tag-display');
-            tagDisplay.textContent = tag;
-            input.parentNode.insertBefore(tagDisplay, input);
-
-            // Allow removal of tags
-            tagDisplay.addEventListener('click', () => {
-                tagDisplay.remove();
-                const index = currentTags.indexOf(tag);
-                if (index > -1) {
-                    currentTags.splice(index, 1);
-                    hiddenInput.value = currentTags.join(',');
-                }
-            });
-        }
     </script>
-
-    <style>
-.tag-input-container {
-    position: relative;
-}
-
-.autocomplete-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--primary-bg);
-    color: var(--accent-color);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    z-index: 10;
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-.autocomplete-dropdown li {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.autocomplete-dropdown li:hover {
-    background: var(--secondary-bg);
-}
-
-.tag-display {
-    display: inline-block;
-    background: var(--btn-bg);
-    color: #fff;
-    padding: 4px 8px;
-    margin: 4px 4px 4px 0;
-    border-radius: 3px;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.tag-display:hover {
-    background: var(--btn-bg-hover);
-}
-
-    </style>
 </body>
 </html>

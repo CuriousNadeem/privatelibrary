@@ -13,6 +13,7 @@ $result = $conn->query("SELECT * FROM galleries");
     <title>Manage Database</title>
     <link rel="stylesheet" href="styles/colorpalette.css">
     <link rel="stylesheet" href="styles/md.css">
+    <link rel="stylesheet" href="styles/tags.css">
 </head>
 <body>
     <?php include 'header.php';?>
@@ -37,7 +38,19 @@ $result = $conn->query("SELECT * FROM galleries");
                 <td><?= $row['id'] ?></td>
                 <td contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="name"><?= $row['name'] ?></td>
                 <td contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="cover_image_path"><?= $row['cover_image_path'] ?></td>
-                <td contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="tags"><?= $row['tags'] ?></td>
+                <td>
+                    <div class="tag-editor" data-id="<?= $row['id'] ?>" data-field="tags">
+                        <div class="current-tags">
+                            <?php foreach (explode(',', $row['tags']) as $tag): ?>
+                            <span class="tag-item"><?= trim($tag) ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                        <input type="text" class="tag-input" placeholder="Add tags..." />
+                        <ul class="autocomplete-dropdown"></ul>
+                        <button class="delete-tags-btn">Delete All Tags</button>
+                    </div>
+                </td>
+
                 <td>
                     <button onclick="deleteRow(<?= $row['id'] ?>)">Delete</button>
                 </td>
@@ -47,31 +60,9 @@ $result = $conn->query("SELECT * FROM galleries");
     </table>
     </div>
 
+    <script type="module" src="js/managedb.js"></script>
+    <script src="js/tags.js"></script>
     <script>
-        // Handle inline editing
-        const log = document.getElementById('log');
-        document.querySelectorAll('.editable').forEach(cell => {
-            cell.addEventListener('blur', function() {
-                const id = this.getAttribute('data-id');
-                const field = this.getAttribute('data-field');
-                const value = this.innerText;
-
-                fetch('update_entry.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, field, value })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        log.innerHTML = "Updated successfully!";
-                    } else {
-                        log.innerHTML = "Error updating entry.";
-                    }
-                });
-            });
-        });
-
         // Handle row deletion
         function deleteRow(id) {
             if (confirm('Are you sure you want to delete this entry?')) {

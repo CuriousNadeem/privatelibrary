@@ -22,6 +22,14 @@ td {
     text-align: left;
     border-bottom: 1px solid var(--text-color);
     transition: background-color 0.3s;
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+}
+
+td:nth-child(2),
+td:nth-child(3),
+td:nth-child(4) {
+    width: 30%; /* Limit file name column to 70% of table width */
 }
 
 /* Highlight row on hover */

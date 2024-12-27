@@ -15,7 +15,7 @@
     /* Button States */
     --btn-bg-hover: #A60538;        /* Button background on hover */
     --btn-text-hover: var(--text-color); /* Button text on hover */
-    --btn-border-hover: var(--text-color); /* Button border on hover */
+    --btn-border-hover: var(--border-highlight); /* Button border on hover */
   
     --btn-bg-pressed: #87052E;      /* Button background when pressed */
     --btn-text-pressed: var(--text-color); /* Button text when pressed */

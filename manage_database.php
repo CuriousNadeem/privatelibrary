@@ -61,7 +61,7 @@ $result = $conn->query("SELECT * FROM galleries");
     </div>
 
     <script type="module" src="js/managedb.js"></script>
-    <script src="js/tags.js"></script>
+    <script src="js/filter.js"></script>
     <script>
         // Handle row deletion
         function deleteRow(id) {

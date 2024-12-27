@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip_files']) && !emp
     </form>
     <div id="alert-box"></div>
 
-    <script src="js/tags.js"></script>
+    <script src="js/filter.js"></script>
     <script>
         // Function to add a tag
     function addTag(input, hiddenInput, tag) {

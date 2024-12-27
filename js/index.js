@@ -150,7 +150,6 @@ function filterGridItems() {
                         return activeFilters[filterType].some(value => {
                             const itemValue = item.getAttribute(`data-${filterType}`);
                             if (itemValue) {
-                                console.log(`Comparing for OR - Filter Type: ${filterType}, Filter Value: ${value}, Item Value: ${itemValue}`);
                                 return itemValue.toLowerCase().includes(value.toLowerCase());
                             }
                             return false;
@@ -165,7 +164,6 @@ function filterGridItems() {
                         return activeFilters[filterType].every(value => {
                             const itemValue = item.getAttribute(`data-${filterType}`);
                             if (itemValue) {
-                                console.log(`Comparing for AND - Filter Type: ${filterType}, Filter Value: ${value}, Item Value: ${itemValue}`);
                                 return itemValue.toLowerCase().includes(value.toLowerCase());
                             }
                             return false;
@@ -177,7 +175,6 @@ function filterGridItems() {
         }
 
         // Show or hide the item based on whether it matches the filters
-        console.log(`Item ${item.querySelector('h3').textContent} - Match: ${matches}`);
         if (matches) {
             item.style.display = ''; // Show item
         } else {
@@ -227,7 +224,6 @@ function applyFilter(type, value) {
 document.getElementById('main-search-btn').addEventListener('click', () => {
     const searchValue = document.getElementById('main-search-box').value.trim();
     if (searchValue) {
-        console.log(`Applying main search filter with value: ${searchValue}`);
         applyFilter('search', searchValue);  // Apply search filter for title
     }
 });
@@ -235,7 +231,6 @@ document.getElementById('main-search-btn').addEventListener('click', () => {
 // Function to filter by title or other attribute (like h3)
 function filterByTitle(item, value) {
     const title = item.querySelector('h3').textContent.toLowerCase();  // Assuming the title is in h3
-    console.log(`Comparing title - Title: ${title}, Search Value: ${value.toLowerCase()}`);
     return title.includes(value.toLowerCase());  // Comparison
 }
 

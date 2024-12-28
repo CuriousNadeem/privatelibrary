@@ -49,10 +49,39 @@ $result = $conn->query("SELECT * FROM galleries");
                         <ul class="autocomplete-dropdown"></ul>
                         <button class="delete-tags-btn">Delete All Tags</button>
                     </div>
+                    <div class="extraEditOptions<?= $row['id'] ?> eeo hidden">
+                        <div class="dropdown">
+                            <input type="text" class="author-input<?= $row['id'] ?> dropbtn" placeholder="Add author..." value="<?= htmlspecialchars($row['author']) ?>" />                      
+                            <div class="dropdown-content authorList" data-id="<?= $row['id'] ?>">
+                                <span>Link 1</span>
+                                <span>Link 2</span>
+                                <span>Link 3</span>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <input type="text" class="language-input<?= $row['id'] ?> dropbtn" placeholder="Add Language..." value="<?= htmlspecialchars($row['language']) ?>" />
+                            <div class="dropdown-content languageList" data-id="<?= $row['id'] ?>">
+                                <span>Link 1</span>
+                                <span>Link 2</span>
+                                <span>Link 3</span>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <input type="text" class="manga-type-input<?= $row['id'] ?> dropbtn" placeholder="Add Manga Type..." value="<?= htmlspecialchars($row['manga_type']) ?>" />
+                            <div class="dropdown-content mangaTypeList" data-id="<?= $row['id'] ?>">
+                                <span>Link 1</span>
+                                <span>Link 2</span>
+                                <span>Link 3</span>
+                            </div>
+                        </div>
+                    </div>
                 </td>
 
                 <td>
-                    <button onclick="deleteRow(<?= $row['id'] ?>)">Delete</button>
+                    <div class="edit-del-btn-con">
+                        <button class="editmore" data-id="<?= $row['id'] ?>">Edit</button>
+                        <button onclick="deleteRow(<?= $row['id'] ?>)">Delete</button>
+                    </div>
                 </td>
             </tr>
             <?php endwhile; ?>

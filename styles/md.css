@@ -92,3 +92,52 @@ button:hover {
     border-radius: 10px;
     text-align: center;
 }
+.eeo.hidden{
+    display: none;
+}
+
+.edit-del-btn-con {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Style The Dropdown Button */
+.dropbtn, 
+.author-input {
+    margin-top: 3px;
+    padding: 5px;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--primary-bg);
+    min-width: 160px;
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content span {
+    color: var(--accent-color);
+    padding: 5px 8px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content span:hover {background-color: var(--secondary-bg)}
+  
+  /* Show the dropdown menu on hover */
+
+    /* Show the dropdown menu on active */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }

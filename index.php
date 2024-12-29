@@ -101,7 +101,7 @@ if (!$result) {
                 <div class="image-container">
                     <img src="<?= $row['cover_image_path'] ?>" alt="<?= $row['name'] ?>" class="cover-image">
                 </div>
-                <h3><?= $row['name'] ?></h3>
+                <p class="card-name"><?= $row['name'] ?></p>
             </a>
         </div>
         <?php endwhile; ?>

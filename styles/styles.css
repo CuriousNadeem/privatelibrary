@@ -3,9 +3,16 @@
     width: 100%;
     max-width: 1920px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 10px;
+    padding: 20px 0px;
+}
+
+@media (max-width: 768px) {
+    p,button {
+        font-size: 12px;
+        font-weight: 400;
+    }
 }
 
 @media (max-width: 768px) {
@@ -16,6 +23,12 @@
 @media (min-width: 769px) and (max-width: 1400px) {
     .grid {
         width: 95%;
+    }
+}
+@media (min-width: 769px) {
+    .card-name {
+        font-size: 16px;
+        font-weight: 500;
     }
 }
 
@@ -46,6 +59,11 @@
 }
 
 .grid-card h3 {
+    margin: 10px;
+    color: var(--text-color);
+    overflow-wrap: break-word;
+}
+.card-name {
     margin: 10px;
     color: var(--text-color);
     overflow-wrap: break-word;

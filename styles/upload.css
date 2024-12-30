@@ -101,3 +101,73 @@ input.tag-input:focus {
     text-align: center;
     color: var(--btn-text);
 }
+
+#file-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.file-card {
+    border: 1px solid var(--accent-color);
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--primary-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.file-card p {
+    margin: 8px 0;
+}
+
+.file-card .fileName {
+    width: 100%;
+    padding: 8px 0;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+.eeo.hidden{
+    display: none;
+}
+/* Style The Dropdown Button */
+.dropbtn, 
+.author-input {
+    margin-top: 4px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--primary-bg);
+    border-radius: 4px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+position: relative;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+display: none;
+position: absolute;
+background-color: var(--primary-bg);
+min-width: 160px;
+z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content span {
+color: var(--accent-color);
+padding: 5px 8px;
+text-decoration: none;
+display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content span:hover {background-color: var(--secondary-bg)}
+
+/* Show the dropdown menu on hover */
+
+/* Show the dropdown menu on active */
+.dropdown:hover .dropdown-content {
+display: block;
+}

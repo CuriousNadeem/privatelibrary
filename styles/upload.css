@@ -119,6 +119,7 @@ input.tag-input:focus {
 
 .file-card p {
     margin: 8px 0;
+    overflow-wrap: anywhere;
 }
 
 .file-card .fileName {
@@ -134,12 +135,17 @@ input.tag-input:focus {
 .dropbtn, 
 .author-input {
     margin-top: 4px;
-    width: 100%;
+    width: -webkit-fill-available;
     padding: 8px;
     border: 1px solid var(--primary-bg);
     border-radius: 4px;
 }
-
+.editmore {
+    margin-top: 5px;
+    padding: 8px;
+    border-radius: 4px;
+    width: -webkit-fill-available;
+}
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
 position: relative;
@@ -152,6 +158,7 @@ position: absolute;
 background-color: var(--primary-bg);
 min-width: 160px;
 z-index: 1;
+width: 60%;
 }
 
 /* Links inside the dropdown */

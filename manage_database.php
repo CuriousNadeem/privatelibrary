@@ -22,71 +22,57 @@ $result = $conn->query("SELECT * FROM galleries");
         <p id="log"></p>
     </div>
     <div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Gallery Name</th>
-                <th>Cover Image Path</th>
-                <th>Tags</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= $row['id'] ?></td>
-                <td contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="name"><?= $row['name'] ?></td>
-                <td contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="cover_image_path"><?= $row['cover_image_path'] ?></td>
-                <td>
-                    <div class="tag-editor" data-id="<?= $row['id'] ?>" data-field="tags">
-                        <div class="current-tags">
-                            <?php foreach (explode(',', $row['tags']) as $tag): ?>
-                            <span class="tag-item"><?= trim($tag) ?></span>
-                            <?php endforeach; ?>
-                        </div>
-                        <input type="text" class="tag-input" placeholder="Add tags..." />
-                        <ul class="autocomplete-dropdown"></ul>
-                        <button class="delete-tags-btn">Delete All Tags</button>
+        <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="file-card">
+            <p>Id:<?= $row['id'] ?></p>
+            <p>Name:</p>
+            <p contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="name"><?= $row['name'] ?></p>
+            <p>Path:</p>
+            <p contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="cover_image_path"><?= $row['cover_image_path'] ?></p>
+            <p>Tags:</p>
+            <div class="tag-editor" data-id="<?= $row['id'] ?>" data-field="tags">
+            <div class="current-tags">
+                <?php foreach (explode(',', $row['tags']) as $tag): ?>
+                <span class="tag-item"><?= trim($tag) ?></span>
+                <?php endforeach; ?>
+            </div>
+            <input type="text" class="tag-input" placeholder="Add tags..." />
+            <ul class="autocomplete-dropdown"></ul>
+            <button class="delete-tags-btn">Delete All Tags</button>
+            </div>
+            <div class="extraEditOptions<?= $row['id'] ?> eeo hidden">
+                <div class="dropdown">
+                    <input type="text" class="author-input<?= $row['id'] ?> dropbtn" placeholder="Add author..." value="<?= htmlspecialchars($row['author']) ?>" />                      
+                    <div class="dropdown-content authorList" data-id="<?= $row['id'] ?>">
+                        <span>Link 1</span>
+                        <span>Link 2</span>
+                        <span>Link 3</span>
                     </div>
-                    <div class="extraEditOptions<?= $row['id'] ?> eeo hidden">
-                        <div class="dropdown">
-                            <input type="text" class="author-input<?= $row['id'] ?> dropbtn" placeholder="Add author..." value="<?= htmlspecialchars($row['author']) ?>" />                      
-                            <div class="dropdown-content authorList" data-id="<?= $row['id'] ?>">
-                                <span>Link 1</span>
-                                <span>Link 2</span>
-                                <span>Link 3</span>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <input type="text" class="language-input<?= $row['id'] ?> dropbtn" placeholder="Add Language..." value="<?= htmlspecialchars($row['language']) ?>" />
-                            <div class="dropdown-content languageList" data-id="<?= $row['id'] ?>">
-                                <span>Link 1</span>
-                                <span>Link 2</span>
-                                <span>Link 3</span>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <input type="text" class="manga-type-input<?= $row['id'] ?> dropbtn" placeholder="Add Manga Type..." value="<?= htmlspecialchars($row['manga_type']) ?>" />
-                            <div class="dropdown-content mangaTypeList" data-id="<?= $row['id'] ?>">
-                                <span>Link 1</span>
-                                <span>Link 2</span>
-                                <span>Link 3</span>
-                            </div>
-                        </div>
+                </div>
+                <div class="dropdown">
+                    <input type="text" class="language-input<?= $row['id'] ?> dropbtn" placeholder="Add Language..." value="<?= htmlspecialchars($row['language']) ?>" />
+                    <div class="dropdown-content languageList" data-id="<?= $row['id'] ?>">
+                        <span>Link 1</span>
+                        <span>Link 2</span>
+                        <span>Link 3</span>
                     </div>
-                </td>
+                </div>
+                <div class="dropdown">
+                    <input type="text" class="manga-type-input<?= $row['id'] ?> dropbtn" placeholder="Add Manga Type..." value="<?= htmlspecialchars($row['manga_type']) ?>" />
+                    <div class="dropdown-content mangaTypeList" data-id="<?= $row['id'] ?>">
+                        <span>Link 1</span>
+                        <span>Link 2</span>
+                        <span>Link 3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-del-btn-con">
+                <button class="editmore" data-id="<?= $row['id'] ?>">Edit</button>
+                <button onclick="deleteRow(<?= $row['id'] ?>)">Delete</button>
+            </div>
+        </div>
+        <?php endwhile; ?>
 
-                <td>
-                    <div class="edit-del-btn-con">
-                        <button class="editmore" data-id="<?= $row['id'] ?>">Edit</button>
-                        <button onclick="deleteRow(<?= $row['id'] ?>)">Delete</button>
-                    </div>
-                </td>
-            </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
     </div>
 
     <script type="module" src="js/managedb.js"></script>

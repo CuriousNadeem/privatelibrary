@@ -116,7 +116,6 @@
                             <input type="text" placeholder="Enter tags" class="tag-input">
                             <input type="hidden" name="tags[]">
                         </div>
-                        <button class="editMore" name="other_button_action" data-id="${i}">Other Action</button>
                         <div class="up-extraEditOptions${i} eeo hidden">
                             <div class="dropdown">
                                 <input type="text" class="up-author-input${i} dropbtn" placeholder="Add author..." />                      
@@ -137,6 +136,7 @@
                                 </div>
                             </div>
                         </div>
+                        <button class="editMore" name="other_button_action" data-id="${i}">Edit More</button>
                     </div>
                 `;
             }

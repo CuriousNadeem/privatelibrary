@@ -56,38 +56,39 @@ if (!$result) {
     <link rel="stylesheet" href="styles/tags.css">
 </head>
 <body>
+    <div id="pageName" data-name="index"></div>
     <?php include 'header.php'; ?>
 
     <div class="search-container">
-    <!-- Main Search Box -->
-    <div class="main-search">
-        <input type="text" id="main-search-box" placeholder="Search..." />
-        <button id="main-search-btn">
-            <img src="assets/img/search2.png" alt="Search" />
-        </button>
-    </div>
-
-    <!-- Filter Buttons -->
-    <div class="filter-buttons">
-        <button class="filter-btn" data-filter="tags">Tags</button>
-        <button class="filter-btn" data-filter="author">Author</button>
-        <button class="filter-btn" data-filter="language">Language</button>
-        <button class="filter-btn" data-filter="manga_type">Manga Type</button>
-        <button id="gate-toggle-btn" class="gate-toggle-btn">OR Gate</button>
-    </div>
-
-    <!-- Dynamic Filter Search -->
-    <div class="filter-search-container">
-        <div class="filter-search" id="filter-search">
-            <!-- Placeholder for dynamic search input -->
+        <!-- Main Search Box -->
+        <div class="main-search">
+            <input type="text" id="main-search-box" placeholder="Search..." />
+            <button id="main-search-btn">
+                <img src="assets/img/search2.png" alt="Search" />
+            </button>
         </div>
-    </div>
 
-    <!-- Applied Filters -->
-    <div class="applied-filters">
-        <h4>Applied Filters:</h4>
-        <ul id="filters-list" class="filters-list"></ul>
-    </div>
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn" data-filter="tags">Tags</button>
+            <button class="filter-btn" data-filter="author">Author</button>
+            <button class="filter-btn" data-filter="language">Language</button>
+            <button class="filter-btn" data-filter="manga_type">Manga Type</button>
+            <button id="gate-toggle-btn" class="gate-toggle-btn">OR Gate</button>
+        </div>
+
+        <!-- Dynamic Filter Search -->
+        <div class="filter-search-container">
+            <div class="filter-search" id="filter-search">
+                <!-- Placeholder for dynamic search input -->
+            </div>
+        </div>
+
+        <!-- Applied Filters -->
+        <div class="applied-filters">
+            <h4>Applied Filters:</h4>
+            <ul id="filters-list" class="filters-list"></ul>
+        </div>
     </div>
 
     <div class="grid">
@@ -109,13 +110,6 @@ if (!$result) {
 
 
     <script src="js/filter.js"></script>
-    <!-- <script>
-        const tags = <?php echo json_encode($tags); ?>;
-        const authors = <?php echo json_encode($author); ?>;
-        const languages = <?php echo json_encode($language); ?>;
-        const mangaTypes = <?php echo json_encode($mangatype); ?>;
-    </script> -->
-
     <script src="js/index.js"></script>
 </body>
 </html>

@@ -1,9 +1,10 @@
+const page = document.querySelector('#pageName');
 const filterButtons = document.querySelectorAll('.filter-btn');
 const filterSearchContainer = document.querySelector('.filter-search-container');
 const filterSearch = document.getElementById('filter-search');
 const filtersList = document.getElementById('filters-list');
-const gridItems = document.querySelectorAll('.grid-card'); // Select all grid items
 const gateToggleBtn = document.getElementById('gate-toggle-btn');
+let gridItems = document.querySelectorAll('.grid-card'); // Select all grid items
 let activeFilters = {
     tags: [],
     authors: [],
@@ -12,6 +13,12 @@ let activeFilters = {
     search: []  // Added search filter for title search
 };
 let currentGateMode = 'OR';  // Default to OR Gate
+
+if(page.dataset.name === 'index') {
+    gridItems = document.querySelectorAll('.grid-card');
+} else if(page.dataset.name === 'managedb') {
+    gridItems = document.querySelectorAll('.file-card');
+}
 
 // Toggle between OR Gate and AND Gate
 gateToggleBtn.addEventListener('click', () => {
@@ -226,14 +233,19 @@ document.getElementById('main-search-btn').addEventListener('click', () => {
     if (searchValue) {
         applyFilter('search', searchValue);  // Apply search filter for title
     }
+    console.log(searchValue);
 });
 
 // Function to filter by title or other attribute (like h3)
 function filterByTitle(item, value) {
-    const title = item.querySelector('h3').textContent.toLowerCase();  // Assuming the title is in h3
+    let title;
+    if(page.dataset.name === 'index') {
+        title = item.querySelector('p').textContent.toLowerCase();  // Assuming the title is in h3
+    } else if(page.dataset.name === 'managedb') {
+        title = item.querySelector('p.editable').textContent.toLowerCase();  // Assuming the title is in h3
+    }
     return title.includes(value.toLowerCase());  // Comparison
 }
-
 // Reset grid view (optional, if you need to clear filtering)
 function resetGrid() {
     gridItems.forEach(item => {

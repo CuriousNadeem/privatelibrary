@@ -1,71 +1,78 @@
 <?php
-    include 'includes/db_connect.php';
+include 'includes/db_connect.php';
 
-    // Check if "Upload All" button was clicked
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_all'])) {
-        // Ensure files are present and not empty
-        if (isset($_FILES['zip_files']) && !empty($_FILES['zip_files']['name'][0])) {
-            $tags = $_POST['tags'] ?? [];
+// Check if "Upload All" button was clicked
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ensure files are present and not empty
+    if (isset($_FILES['zip_files']) && !empty($_FILES['zip_files']['name'][0])) {
+        $tags = $_POST['tags'] ?? [];
 
-            foreach ($_FILES['zip_files']['name'] as $index => $fileName) {
-                $fileTmpName = $_FILES['zip_files']['tmp_name'][$index];
-                $zipName = pathinfo($fileName, PATHINFO_FILENAME);
-                $tag = isset($tags[$index]) ? $tags[$index] : '';
+        foreach ($_FILES['zip_files']['name'] as $index => $fileName) {
+            $fileTmpName = $_FILES['zip_files']['tmp_name'][$index];
+            $zipName = pathinfo($fileName, PATHINFO_FILENAME);
+            $tag = isset($tags[$index]) ? $tags[$index] : '';
+            $fileError = $_FILES['zip_files']['error'][$index];
 
-                // Check file size
-                if ($_FILES['zip_files']['size'][$index] > 200 * 1024 * 1024) {
-                    echo "Error: The file $fileName is too large. Maximum allowed size is 200MB.<br>";
+            if ($fileError !== UPLOAD_ERR_OK) {
+                echo "File upload error: " . $fileError . "<br>";
+                continue;
+            }
+
+            // Check file size
+            if ($_FILES['zip_files']['size'][$index] > 350 * 1024 * 1024) {
+                echo "Error: The file $fileName is too large. Maximum allowed size is 200MB.<br>";
+                continue;
+            }
+
+            // Create target directory for extracted files
+            $targetDir = __DIR__ . "/assets/galleries/$zipName";
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            // Move and extract the ZIP file
+            $zipPath = $targetDir . ".zip";
+            move_uploaded_file($fileTmpName, $zipPath);
+
+            $zip = new ZipArchive();
+            if ($zip->open($zipPath) === TRUE) {
+                $zip->extractTo($targetDir);
+                $zip->close();
+                unlink($zipPath); // Remove the ZIP file after extraction
+
+                // Determine cover image path
+                $coverImagePath = "assets/galleries/$zipName/1.jpg";
+                if (!file_exists(__DIR__ . "/$coverImagePath")) {
+                    $coverImagePath = "assets/galleries/$zipName/0.jpg";
+                }
+
+                if (!file_exists(__DIR__ . "/$coverImagePath")) {
+                    echo "Error: No valid cover image found in the uploaded ZIP for $fileName.<br>";
                     continue;
                 }
 
-                // Create target directory for extracted files
-                $targetDir = __DIR__ . "/assets/galleries/$zipName";
-                if (!file_exists($targetDir)) {
-                    mkdir($targetDir, 0777, true);
-                }
+                // Insert gallery into the database
+                $sql = "INSERT INTO galleries (name, cover_image_path, tags, created_at) VALUES (?, ?, ?, NOW())";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('sss', $zipName, $coverImagePath, $tag);
 
-                // Move and extract the ZIP file
-                $zipPath = $targetDir . ".zip";
-                move_uploaded_file($fileTmpName, $zipPath);
-
-                $zip = new ZipArchive();
-                if ($zip->open($zipPath) === TRUE) {
-                    $zip->extractTo($targetDir);
-                    $zip->close();
-                    unlink($zipPath); // Remove the ZIP file after extraction
-
-                    // Determine cover image path
-                    $coverImagePath = "assets/galleries/$zipName/1.jpg";
-                    if (!file_exists(__DIR__ . "/$coverImagePath")) {
-                        $coverImagePath = "assets/galleries/$zipName/0.jpg";
-                    }
-
-                    if (!file_exists(__DIR__ . "/$coverImagePath")) {
-                        echo "Error: No valid cover image found in the uploaded ZIP for $fileName.<br>";
-                        continue;
-                    }
-
-                    // Insert gallery into the database
-                    $sql = "INSERT INTO galleries (name, cover_image_path, tags, created_at) VALUES (?, ?, ?, NOW())";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param('sss', $zipName, $coverImagePath, $tag);
-
-                    if ($stmt->execute()) {
-                        echo "Gallery $fileName uploaded successfully!<br>";
-                    } else {
-                        echo "Error: Failed to save gallery $fileName in the database.<br>";
-                    }
+                if ($stmt->execute()) {
+                    echo "Gallery $fileName uploaded successfully!<br>";
                 } else {
-                    echo "Error: Failed to open the ZIP file $fileName.<br>";
+                    echo "Error: Failed to save gallery $fileName in the database.<br>";
                 }
+            } else {
+                echo "Error: Failed to open the ZIP file $fileName.<br>";
             }
-        } else {
-            echo "No files selected for upload.<br>";
         }
+    } else {
+        echo "No files selected for upload.<br>";
+    }
     } else {
         echo "<script>console.log(\"Invalid request or button not clicked!\");</script>";
     }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -78,10 +85,19 @@
     <link rel="stylesheet" href="styles/tags.css">
 </head>
 <body>
+    <div id="top">
     <?php include 'header.php';?>
     <h1>Upload Gallery</h1>
+    <!-- This div will contain progress bars -->
+    <div class="status-box">
+        <p class="log">Please Upload Files!</p>
+    </div>
+    <!-- Progress Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
 
-    <form action="upload.php" method="POST" enctype="multipart/form-data">
+    <form action="upload.php" method="POST" enctype="multipart/form-data" id="uploadForm">
         <label for="zip_files">Choose ZIP Files (multiple):</label>
         <input class="choosebtn" type="file" name="zip_files[]" id="zip_files" multiple required>
 
@@ -91,7 +107,7 @@
         </div>
 
         <br><br>
-        <button name="upload_all">Upload All</button>
+        <button id="uploadButton" name="upload_all">Upload All</button>
     </form>
     <div id="alert-box"></div>
 
@@ -99,6 +115,7 @@
     <script>
         const fileInput = document.getElementById('zip_files');
         const fileContainer = document.getElementById('file-container');
+        const log = document.querySelector('.log');
 
         fileInput.addEventListener('change', function () {
             let cardHTML = ''; // Initialize HTML string
@@ -220,85 +237,132 @@
             });
         }
 
-        
-    function EditMore() {
-        document.querySelectorAll('.editMore').forEach(btn =>{
-            btn.addEventListener('click', ()=>{
-                event.preventDefault(); // Prevent form submission
-                const editDiv = document.querySelector(`.up-extraEditOptions${btn.dataset.id}`);
-                if (editDiv.classList.contains('hidden')) {
-                    editDiv.classList.remove('hidden');
-                } else {
-                    editDiv.classList.add('hidden');
-                }
-            });
-        })
-        document.querySelectorAll('.upLanguageList').forEach(element => {
-            element.innerHTML = ``;
-            languages.forEach(language =>{
-                element.innerHTML += `<span class="language" data-id="${element.dataset.id}">${language}</span>`
-            })
-        })
-        document.querySelectorAll('.upMangaTypeList').forEach(element => {
-            element.innerHTML = ``;
-            mangaTypes.forEach(mangaType =>{
-                element.innerHTML += `<span class="mangatype" data-id="${element.dataset.id}">${mangaType}</span>`
-            })
-        })
-        document.querySelectorAll('.upAuthorList').forEach(element => {
-            element.innerHTML = ``;
-            authors.forEach(author =>{
-                element.innerHTML += `<span class="author" data-id="${element.dataset.id}">${author}</span>`
-            })
-        })
-        document.querySelectorAll('.language').forEach(element => {
-            element.addEventListener('click', () => {
-                const input = document.querySelector(`.up-language-input${element.dataset.id}`);
-                input.value = element.innerHTML;
-                input.dispatchEvent(new Event('blur')); // Trigger the save logic
-            });
-        });
-        
-        document.querySelectorAll('.mangatype').forEach(element => {
-            element.addEventListener('click', () => {
-                const input = document.querySelector(`.up-manga-type-input${element.dataset.id}`);
-                input.value = element.innerHTML;
-                input.dispatchEvent(new Event('blur')); // Trigger the save logic
-            });
-        });
-        document.querySelectorAll('.author').forEach(element => {
-            element.addEventListener('click', () => {
-                const input = document.querySelector(`.up-author-input${element.dataset.id}`);
-                input.value = element.innerHTML;
-                input.dispatchEvent(new Event('blur')); // Trigger the save logic
-            });
-        });
-        
-        document.querySelectorAll('.author, .language, .mangatype').forEach(span => {
-            span.addEventListener('click', function () {
-                const id = this.getAttribute('data-id');
-                const field = this.classList.contains('author') ? 'author' :
-                            this.classList.contains('language') ? 'language' :
-                            'manga_type';
-                const value = this.innerText;
-        
-                fetch('update_entry.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, field, value })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        log.innerHTML = `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`;
+        function EditMore() {
+            document.querySelectorAll('.editMore').forEach(btn =>{
+                btn.addEventListener('click', ()=>{
+                    event.preventDefault(); // Prevent form submission
+                    const editDiv = document.querySelector(`.up-extraEditOptions${btn.dataset.id}`);
+                    if (editDiv.classList.contains('hidden')) {
+                        editDiv.classList.remove('hidden');
                     } else {
-                        log.innerHTML = `Error updating ${field}.`;
+                        editDiv.classList.add('hidden');
                     }
                 });
+            })
+            document.querySelectorAll('.upLanguageList').forEach(element => {
+                element.innerHTML = ``;
+                languages.forEach(language =>{
+                    element.innerHTML += `<span class="language" data-id="${element.dataset.id}">${language}</span>`
+                })
+            })
+            document.querySelectorAll('.upMangaTypeList').forEach(element => {
+                element.innerHTML = ``;
+                mangaTypes.forEach(mangaType =>{
+                    element.innerHTML += `<span class="mangatype" data-id="${element.dataset.id}">${mangaType}</span>`
+                })
+            })
+            document.querySelectorAll('.upAuthorList').forEach(element => {
+                element.innerHTML = ``;
+                authors.forEach(author =>{
+                    element.innerHTML += `<span class="author" data-id="${element.dataset.id}">${author}</span>`
+                })
+            })
+            document.querySelectorAll('.language').forEach(element => {
+                element.addEventListener('click', () => {
+                    const input = document.querySelector(`.up-language-input${element.dataset.id}`);
+                    input.value = element.innerHTML;
+                    input.dispatchEvent(new Event('blur')); // Trigger the save logic
+                });
             });
-        });
-    }
+            
+            document.querySelectorAll('.mangatype').forEach(element => {
+                element.addEventListener('click', () => {
+                    const input = document.querySelector(`.up-manga-type-input${element.dataset.id}`);
+                    input.value = element.innerHTML;
+                    input.dispatchEvent(new Event('blur')); // Trigger the save logic
+                });
+            });
+            document.querySelectorAll('.author').forEach(element => {
+                element.addEventListener('click', () => {
+                    const input = document.querySelector(`.up-author-input${element.dataset.id}`);
+                    input.value = element.innerHTML;
+                    input.dispatchEvent(new Event('blur')); // Trigger the save logic
+                });
+            });
+            
+            document.querySelectorAll('.author, .language, .mangatype').forEach(span => {
+                span.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const field = this.classList.contains('author') ? 'author' :
+                                this.classList.contains('language') ? 'language' :
+                                'manga_type';
+                    const value = this.innerText;
+            
+                    fetch('update_entry.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id, field, value })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            log.innerHTML = `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`;
+                        } else {
+                            log.innerHTML = `Error updating ${field}.`;
+                        }
+                    });
+                });
+            });
+        }
     </script>
-    <script src="js/upload.js"></script>
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            var formData = new FormData(document.getElementById('uploadForm'));
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'upload.php', true);
+
+            // Show progress bar
+            document.getElementById('progress-container').style.display = 'block';
+
+            // Scroll to progress bar
+            document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
+
+            // Update progress bar as upload happens
+            xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                    var percent = (e.loaded / e.total) * 100;
+                    document.getElementById('progress-bar').style.width = percent + '%';
+                    console.log('Progress: ' + percent.toFixed(2) + '%');
+                }
+            });
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Upload Successful:', xhr.responseText);
+                    log.innerHTML = 'Upload complete!';
+                    document.getElementById('progress-container').style.display = 'none';  // Hide progress bar
+                } else {
+                    console.log('Error during upload:', xhr.statusText);
+                    log.innerHTML = 'Error during upload';
+                    document.getElementById('progress-container').style.display = 'none';  // Hide progress bar
+                }
+            };
+
+            xhr.send(formData);
+        });
+
+    </script>
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

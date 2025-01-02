@@ -1,4 +1,4 @@
-const authors = ["AuthorA","AuthorB","AuthorC","AuthorD"];
-const languages = ["English","Japanese","Korean","Chinese"];
-const mangaTypes = ["Webtoon","Manga","Manhwa"];
+const authors = ["MARIMO_(AHEN)","Magoroku","Usagihara-sen_(Usagihara_Kuro)"];
+const languages = ["English","Japanese","Korean","Chinese","Misc"];
+const mangaTypes = ["Manga (Colorless)","Manga (Color)","Manga (Partial Color)", "Manhwa", "Image Set", "Game Image Set", "Donghua"];
 const tags = ["Foot Licking","Foot Fetish","Futanari","Dickgirl","Dickgirl on Male","Dickgirl on Female","Dickgirl on Dickgirl","Pegging","Femdom","NTR","BDSM","Stockings","Giantess","Inside Shoe","Inside Socks","Femboy","MindBreak","Ahegao","Boy Ahegao","Girl Ahegao","Stomach Defloration","Belly Bulge","Only Female"];

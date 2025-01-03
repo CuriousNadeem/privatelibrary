@@ -37,10 +37,23 @@ if ($gallery):
             <img src="<?= $galleryPath . '/' . "1.jpg" ?>" alt="<?= $image ?>">
         </div>
         <div class="details">
-            <h2><?= $gallery['name'] ?></h2>
-            <p>Tags: <?= $gallery['tags'] ?></p>
-            <p>Author: </p>
+            <p class="heading"><?= $gallery['name'] ?></p>
+            <p>Tags:</p>
+            <div class="tags-container">
+                <?php 
+                $tagsArray = explode(',', $gallery['tags']); // Split tags by comma
+                foreach ($tagsArray as $tag): ?>
+                    <button class="filter-btn" onclick="handleFilterClick('<?= trim($tag) ?>', 'tags')"><?= trim($tag) ?></button>
+                <?php endforeach; ?>
+            </div>
+            <p>Author:</p>
+            <button class="filter-btn" onclick="handleFilterClick('<?= $gallery['author'] ?>', 'author')"><?= $gallery['author'] ?></button>
+            <p>Language:</p>
+            <button class="filter-btn" onclick="handleFilterClick('<?= $gallery['language'] ?>', 'language')"><?= $gallery['language'] ?></button>
+            <p>Manga Type:</p>
+            <button class="filter-btn" onclick="handleFilterClick('<?= $gallery['manga_type'] ?>', 'manga_type')"><?= $gallery['manga_type'] ?></button>
         </div>
+
     </div>
     <div class="gallery-container">
     <div class="gallery">
@@ -49,6 +62,18 @@ if ($gallery):
         <?php endforeach; ?>
     </div>
     </div>
+
+    <script>
+        function handleFilterClick(value, type) {
+            // Save the filter value and type to sessionStorage
+            sessionStorage.setItem('filtervalue', value);
+            sessionStorage.setItem('filtertype', type);
+
+            // Redirect to index.php
+            window.location.href = 'index.php';
+        }
+    </script>
+
 </body>
 </html>
 

@@ -111,5 +111,6 @@ if (!$result) {
 
     <script src="js/filter.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/autoSelectTags.js"></script>
 </body>
 </html>

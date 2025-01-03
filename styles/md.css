@@ -143,6 +143,8 @@ button:hover {
   .table-container {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     gap: 16px;
 }
 
@@ -153,8 +155,11 @@ button:hover {
     background: var(--primary-bg);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
+    max-width: 380px;
 }
 
+@media (min-width: 768px) {
+}
 .file-card p {
     margin: 8px 0;
     overflow-wrap: anywhere;
@@ -165,4 +170,13 @@ button:hover {
     padding: 8px 0;
     margin: 8px 0;
     overflow-wrap: anywhere;
+}
+.img-id-container {
+    display: flex;
+    gap: 8px;
+}
+.mdb-img {
+    min-width: 120px;
+    width: 50%;
+    max-width: 320px;
 }

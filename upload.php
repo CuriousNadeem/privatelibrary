@@ -343,6 +343,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     console.log('Upload Successful:', xhr.responseText);
                     log.innerHTML = 'Upload complete!';
                     document.getElementById('progress-container').style.display = 'none';  // Hide progress bar
+                    fileContainer.innerHTML = '';
+                    fileInput.value = '';
                 } else {
                     console.log('Error during upload:', xhr.statusText);
                     log.innerHTML = 'Error during upload';

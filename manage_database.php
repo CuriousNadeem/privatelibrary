@@ -104,9 +104,14 @@ if (!$result) {
             data-author="<?= htmlspecialchars($row['author']) ?>" 
             data-language="<?= htmlspecialchars($row['language']) ?>" 
             data-manga_type="<?= htmlspecialchars($row['manga_type']) ?>">
-            <p>Id:<?= $row['id'] ?></p>
-            <p>Name:</p>
-            <p contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="name"><?= $row['name'] ?></p>
+            <div class="img-id-container">
+                <img class="mdb-img" src="<?= $row['cover_image_path'] ?>" alt="<?= $row['name'] ?>">
+                <div class="text-con">
+                    <p class="tag-item">ID: <?= $row['id'] ?></p>
+                    <p>Name:</p>
+                    <p contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="name"><?= $row['name'] ?></p>
+                </div>
+            </div>
             <p>Path:</p>
             <p contenteditable="true" class="editable" data-id="<?= $row['id'] ?>" data-field="cover_image_path"><?= $row['cover_image_path'] ?></p>
             <p>Tags:</p>
